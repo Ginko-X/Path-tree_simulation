@@ -7,7 +7,3 @@ Fst* generate_fst(){
   return fst;
 }
 
-
-/* int main(int argc, char **argv){ */
-/*   generate_fst(); */
-/* } */
