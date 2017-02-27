@@ -1,6 +1,8 @@
 /* This file defines the basic operations about path trees. 
  */
-#include "FST.h"
+//#include "FST.h"
+#include "Utils.h"
+#define Fst int
 
 typedef struct TreeNode {
   int n; // state number, only meaningful for leaves node
@@ -10,32 +12,34 @@ typedef struct TreeNode {
 } TreeNode;
 
 typedef struct PathTree {
-  TreeNode *root;
-  TreeNode **notelist;
+  TreeNode *node;
+  //PathTree *notelist;
 } PathTree;
 
 
 /* Generate the initial path tree for a given Thompson FST
  */
-void path_tree_init(Fst *fst, PathTree*);
+void path_tree_init(Fst (*fst)[2], PathTree*);
+
+void print_pathtree(TreeNode* root);
 
 
 /* compute the set of epsilon-closure for the state 'stateNum' in 'fst', 
  * result represented as a path tree
  */
-PathTree* closure_one(PathTree pathTree, Fst *fst, int stateNum);
+void closure_one(TreeNode *node, int, Fst (*fst)[2]);
 
 
 /* Perform epsilon-closure on the 'pathTree'
  */
-void closure(PathTree *pathTree, Fst *fst, int stateNum);
+void closure(PathTree *pathTree, Fst (*fst)[2], int stateNum);
 
 
 /* Compute the transition on the input 'symbol' 
  */
-void step(PathTree *pathTree, Fst *fst, ICPair* leaves, char symbol);
+void step(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
 
-void kill(PathTree *pathTree, Fst *fst, ICPair* leaves, char symbol);
+void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
 
 /* Contract the path-tree by merging all the determinized states
  * return the bits of the determinized stem if any

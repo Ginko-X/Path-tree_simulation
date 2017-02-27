@@ -9,7 +9,24 @@
 #define ALPHABET "ab"
 #define ALPHABET_SIZE  2
 
+ // Simplified Thompson FST representation:
+  // First column: the left choice, -1 means no outgoing edge,i.e. final state
+  // Second column: the right choice or the transition symbol below: 
+  // epsilon:-1; 
+  // a:-2 
+  // b:-3
+  // c:-4,
+ 
+ int fst1[9][2] = {{1,5},{2,-2},{3,-3},
+  				   {0,4},{8,-1},{6,-2},
+  				   {7,-4},{0,-1},{-1,-1}};
 
+  int fst2[17][2] = {{1,8},{2,-1},{3,5},
+  					{4,-2},{2,-1},{6,-3},
+  					{7,-1},{-1,-1},{9,-1},
+  					{10,16},{11,14},{12,-2},
+  					{13,-1},{9,-1},{15,-3},
+  					{13,-1},{7,-1}};
 //
 typedef struct List List;
 struct List{
@@ -35,23 +52,19 @@ void add_pathtree(List* list, PathTree * pt){
 
 
 int main(int argc, char **argv){
-  printf("Simulation starts...");
+  printf("Simulation starts...\n");
   
-  char alphabet[ALPHABET_SIZE] = ALPHABET;
-
-  //Fst* fst = (Fst*)malloc(sizeof(Fst));
-  char fst[9][2] = {"15","2a","3b","04","8","6a","7c","0",""};
-
-  //generate_fst(fst); // *fix: allocate memory
+//  char alphabet[ALPHABET_SIZE] = ALPHABET;
  
   PathTree* initPt =(PathTree*)malloc(sizeof(PathTree));
-  path_tree_init(fst, initPt); // generate the init path-tree
+  path_tree_init(fst2, initPt); // generate the init path-tree
   
-  add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
+  print_pathtree(initPt->node);
+  // add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
 
-  List * tempList;
-  bool coverage = false;
-  char* output;
+  // List * tempList;
+  // bool coverage = false;
+  // char* output;
 
 //   PathTree* ptPointer = pathTreeList->nodePt;
 

@@ -25,8 +25,3 @@ void generate_fst(char* fst, int fstSize){
 	// fst->startSt = 
 }
 
-int main(){
-	char simpleFst[9][2] = {"15","2a","3b","04","8","6a","7c","0",""};
-	generate_fst(simpleFst,9);
-}
-
