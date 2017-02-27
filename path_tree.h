@@ -11,11 +11,7 @@ typedef struct TreeNode {
   struct TreeNode *rchild; // 1-epsilon
 } TreeNode;
 
-typedef struct PathTree {
-  TreeNode *node;
-  //PathTree *notelist;
-} PathTree;
-
+typedef TreeNode PathTree;
 
 /* Generate the initial path tree for a given Thompson FST
  */

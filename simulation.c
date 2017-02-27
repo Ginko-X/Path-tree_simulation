@@ -34,19 +34,24 @@ struct List{
 	List *nextPt;
 };
 
-List* pathTreeList; // n会被init成0
-static int ptCounter=0 ; //counter for the path-trees 
+List* pathTreeList; 
+static int pathtreeCounter=0 ; //counter for the path-trees 
 
 /* Add a pathtree into the list */
-void add_pathtree(List* list, PathTree * pt){
-	if(list->nodePt== NULL)
+void add_pathtree(List* list, PathTree* pt){
+	if(!list->nodePt){ // the init path-tree
 		list->nodePt = pt;
+		list->nextPt = NULL;
+	}
 	else{
+		while(list->nextPt)
+			list = list->nextPt;
 		List* newList =(List *)malloc(sizeof(List));
 		newList->nodePt = pt;
+		newList->nextPt = NULL;
 		list->nextPt= newList;
 	} 
-	ptCounter++;
+	pathtreeCounter++;
 }
 
 
@@ -58,10 +63,12 @@ int main(int argc, char **argv){
  
   PathTree* initPt =(PathTree*)malloc(sizeof(PathTree));
   path_tree_init(fst2, initPt); // generate the init path-tree
+//  print_pathtree(initPt);
   
-  print_pathtree(initPt->node);
-  // add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
-
+  pathTreeList = (List*)malloc(sizeof(List));
+  add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
+//  printf("pathTree counter: %d \n", pathtreeCounter);
+  
   // List * tempList;
   // bool coverage = false;
   // char* output;

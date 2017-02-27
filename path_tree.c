@@ -8,19 +8,14 @@
 /* Generate the initial path tree for a given Thompson FST
  */
 
-void path_tree_init(Fst (*fst)[2], PathTree* pt){
-	TreeNode* root; 
-	root = (TreeNode*) malloc(sizeof(TreeNode));
+void path_tree_init(Fst (*fst)[2], PathTree* root){
 	root->n = 0;
 //		node->reg = ??
-	pt->node = root;
 	closure_one(root,0,fst);
 }
 	
 
-/* compute the set of epsilon-closure for the state 'stateNum' in 'fst', 
- * result represented as a path tree
- * node->n already known
+/* compute the set of epsilon-closure for the state 'st' in 'fst',
  */
 void closure_one(TreeNode *node, int st, Fst (*fst)[2]){
 	if( fst[st][0] == -1 || fst[st][1] < -1 ){ // final state or symbol transition state
@@ -47,7 +42,7 @@ void closure_one(TreeNode *node, int st, Fst (*fst)[2]){
 	}
 }
 
-//preorder traversal
+//print out the path-tree states in a preorder traversal
 void print_pathtree(TreeNode* root){
 	if(root){
 		printf("%d  ", root->n);
