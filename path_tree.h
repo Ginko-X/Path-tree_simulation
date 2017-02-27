@@ -17,7 +17,7 @@ typedef struct PathTree {
 
 /* Generate the initial path tree for a given Thompson FST
  */
-PathTree* path_tree_init(Fst *fst);
+void path_tree_init(Fst *fst, PathTree*);
 
 
 /* compute the set of epsilon-closure for the state 'stateNum' in 'fst', 
@@ -28,12 +28,22 @@ PathTree* closure_one(PathTree pathTree, Fst *fst, int stateNum);
 
 /* Perform epsilon-closure on the 'pathTree'
  */
-PathTree* closure(PathTree pathTree, Fst *fst);
+void closure(PathTree *pathTree, Fst *fst, int stateNum);
 
 
 /* Compute the transition on the input 'symbol' 
  */
-PathTree* step(PathTree *pathTree, Fst *fst, int stateNum, char symbol);
+void step(PathTree *pathTree, Fst *fst, ICPair* leaves, char symbol);
+
+void kill(PathTree *pathTree, Fst *fst, ICPair* leaves, char symbol);
+
+/* Contract the path-tree by merging all the determinized states
+ * return the bits of the determinized stem if any
+ */
+char* contract(PathTree *pathTree);
+
+// ??
+void prune(PathTree *pathTree);
 
 
 /*************** Basic operations for Path Tree  ***********************/
@@ -52,7 +62,7 @@ char* path(PathTree *pathTree, TreeNode *leaf, TreeNode *root);
 /* Get the list of leaves, which is represented as:
  * a list of ICPairs
  */
-ICPair* leaves(PathTree *pathTree);
+ICPair* get_leaves(PathTree *pathTree);
 
 
 

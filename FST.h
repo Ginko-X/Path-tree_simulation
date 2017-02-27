@@ -20,7 +20,7 @@ typedef struct Fst {
 } Fst;
 
 
-Fst* generate_fst();
+void generate_fst(char*, int);
 
 
     
