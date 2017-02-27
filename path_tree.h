@@ -9,6 +9,7 @@ typedef struct TreeNode {
   char *reg; // the bit string on the edge
   struct TreeNode *lchild; // 0-epsilon
   struct TreeNode *rchild; // 1-epsilon
+  struct TreeNode *parent;
 } TreeNode;
 
 typedef TreeNode PathTree;

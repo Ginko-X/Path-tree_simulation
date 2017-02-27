@@ -3,6 +3,7 @@
 #include "path_tree.h"
 
 #define Fst int
+#define A2I(x) (95-x) 
 
 
 /* Generate the initial path tree for a given Thompson FST
@@ -10,6 +11,7 @@
 
 void path_tree_init(Fst (*fst)[2], PathTree* root){
 	root->n = 0;
+	root->parent = NULL;
 //		node->reg = ??
 	closure_one(root,0,fst);
 }
@@ -39,6 +41,8 @@ void closure_one(TreeNode *node, int st, Fst (*fst)[2]){
 		closure_one(rnode,rst, fst);
 		node->lchild = lnode;
 		node->rchild = rnode;
+		lnode->parent = node;
+		rnode->parent = node;
 	}
 }
 
@@ -58,11 +62,35 @@ void print_pathtree(TreeNode* root){
 void closure(PathTree *pathTree, Fst (*fst)[2], int stateNum);
 
 
+void kill_one(TreeNode *node, int st){
+	TreeNode* pr = node->parent;
+	if(pr->lchild->n == st) // this 'node' is the lchild of its parent
+		pr->lchild = pr->rchild;
+	pr->rchild = NULL;
+}
+
+void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
+
+
+void step_one(TreeNode* node, int st, char symbol, Fst (*fst)[2]){
+	if(fst[st][1] == A2I(symbol)){
+		TreeNode* newNode = (TreeNode*) malloc(sizeof(TreeNode));
+		int newSt = fst[st][0];
+		newNode->n = newSt;
+		closure_one(newNode, newSt, fst);
+		node->lchild = newNode;
+		node->rchild = NULL;
+	}
+	else // kill this branch
+		kill_one(node,st);
+}
+
+
 /* Compute the transition on the input 'symbol' 
  */
 void step(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
 
-void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
+
 
 /* Contract the path-tree by merging all the determinized states
  * return the bits of the determinized stem if any

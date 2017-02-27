@@ -9,6 +9,10 @@
 #define ALPHABET "ab"
 #define ALPHABET_SIZE  2
 
+#define A2I(x) (95-x)  // letters must be ACSII greater than 'a'
+
+#define TEST 1
+
  // Simplified Thompson FST representation:
   // First column: the left choice, -1 means no outgoing edge,i.e. final state
   // Second column: the right choice or the transition symbol below: 
@@ -16,6 +20,7 @@
   // a:-2 
   // b:-3
   // c:-4,
+  // i.e: 95 - int(x)
  
  int fst1[9][2] = {{1,5},{2,-2},{3,-3},
   				   {0,4},{8,-1},{6,-2},
@@ -58,22 +63,30 @@ void add_pathtree(List* list, PathTree* pt){
 
 int main(int argc, char **argv){
   printf("Simulation starts...\n");
-  
-//  char alphabet[ALPHABET_SIZE] = ALPHABET;
- 
+  Fst (*fst)[2] = fst2;
+
   PathTree* initPt =(PathTree*)malloc(sizeof(PathTree));
   path_tree_init(fst2, initPt); // generate the init path-tree
-//  print_pathtree(initPt);
-  
-  pathTreeList = (List*)malloc(sizeof(List));
-  add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
-//  printf("pathTree counter: %d \n", pathtreeCounter);
-  
+//#if TEST
+  print_pathtree(initPt);
+//#endif  
+
+   pathTreeList = (List*)malloc(sizeof(List));
+   add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
+// #if TEST
+   printf("pathTree counter: %d \n", pathtreeCounter);
+// #endif  
+
+//   step_one(initPt, 3,'a', fst);
+// #if TEST
+//   print_pathtree(initPt);
+// #endif
+  // printf("first alphabet: %d", A2I(ALPHABET[0]));
   // List * tempList;
   // bool coverage = false;
   // char* output;
 
-//   PathTree* ptPointer = pathTreeList->nodePt;
+  // PathTree* ptPointer = pathTreeList->nodePt;
 
 //   while(!coverage){ // check if the new-generated path-trees are coverd already
 //   	while(!ptPointer){ //visit all the path-trees
@@ -99,7 +112,7 @@ int main(int argc, char **argv){
 //  	 	ptPointer = pathTreeList->nextPt;
 // 	}
 // 	coverage = is_covered(pathTreeList, tempList);
-// 	}
+	// }
 
 }
 
