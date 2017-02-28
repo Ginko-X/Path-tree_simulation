@@ -181,6 +181,7 @@ void prune(PathTree *pathTree);
 /* Check if the two path-trees are the same, two comparison conditions:
  * 1. all leaf states are the same
  * 2. all paths for each leaf are the same
+ * Return 1 if the same; 0 if not
  */
 int compare_pathtree(PathTree* pt1, PathTree* pt2){
 	List* leaves1 = (List*) malloc(sizeof(List));
@@ -198,13 +199,13 @@ int compare_pathtree(PathTree* pt1, PathTree* pt2){
 			p2 = p2->nextPt;
 		}
 		else{
-			return -1;
+			return 0;
 		}
 	}
 	if(p1== NULL && p2 ==NULL)
 		return 1; // equal
 	else 
-		return -1; // not equal
+		return 0; // not equal
 }
 
 /* Compute the bit-path from the root to the leaf
@@ -262,6 +263,20 @@ void copy_pathtree(PathTree* src, PathTree* dest){
 	}
 }
 
+
+/* Check if the path-tree 'pt' is already contained in the path-tree list
+ * Return 1 if true; otherwise 0
+ */
+int is_contained(List* ptList, PathTree* pt){
+	List* ptPointer = ptList;
+	while(ptPointer){
+		if(compare_pathtree(ptPointer->nodePt, pt)) //equal
+			return 1;
+		else
+			ptPointer = ptPointer->nextPt;
+	}
+	return 0;
+}
 
 
 

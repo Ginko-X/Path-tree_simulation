@@ -30,6 +30,8 @@ void path_tree_init(Fst (*fst)[2], PathTree*);
 
 void print_pathtree(TreeNode* root);
 
+void print_list(List* list);
+
 
 /* compute the set of epsilon-closure for the state 'stateNum' in 'fst', 
  * result represented as a path tree
@@ -60,13 +62,7 @@ void contract(PathTree *pathTree);
 // ??
 void prune(PathTree *pathTree);
 
-
-/*************** Basic operations for Path Tree  ***********************/
-// Reference: Grathwolh's PhD Thesis Page 99 
-
-/* Get the root node of a path tree 
- */
-TreeNode* get_root(PathTree *pathTree);
+int compare_pathtree(PathTree* pt1, PathTree* pt2);
 
 /* Compute the bit-path from the root to the leaf
  */
@@ -76,8 +72,13 @@ int path(PathTree *root, TreeNode *leaf);
 /* Get the list of leaves, which is represented as:
  * a list of ICPairs
  */
-//ICPair* get_leaves(PathTree *pathTree);
+void get_leaves(PathTree *root, List* leaves);
 
+
+void copy_pathtree(PathTree* src, PathTree* dest);
+
+
+int is_contained(List* ptList, PathTree* pt);
 
 
 

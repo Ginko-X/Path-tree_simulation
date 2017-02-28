@@ -50,7 +50,7 @@ int main(int argc, char **argv){
   
   Fst (*fst)[2] = fst2; // choose a Thompson fst
 
-//  char alphabet[ALPHABET_SIZE] = ALPHABET;
+  char alphabet[ALPHABET_SIZE] = ALPHABET;
  
   PathTree* initPt =(PathTree*)malloc(sizeof(PathTree));
   path_tree_init(fst, initPt); // generate the init path-tree
@@ -69,8 +69,11 @@ int main(int argc, char **argv){
 // copy a path-tree
   PathTree* pt2 =(PathTree*)malloc(sizeof(PathTree));
   copy_pathtree(initPt, pt2);
-  add_pathtree(pathTreeList,pt2);
-  pathtreeCounter++;
+
+  
+  // add_pathtree(pathTreeList,pt2);
+  // pathtreeCounter++;
+
 #if COMPARE
    printf("pathTree counter: %d \n Pathtrees: ", pathtreeCounter);
    print_list(pathTreeList); NEW_LINE;
@@ -91,39 +94,41 @@ int main(int argc, char **argv){
   printf("2nd: Compare initpt and pt2: %d\n",compare_pathtree(initPt, pt2));
 #endif
 
+  printf("is_contained pt2: %d\n", is_contained(pathTreeList,pt2));
 
-// List * tempList;
-// bool coverage = false;
-// char* output;
-
-//   PathTree* ptPointer = pathTreeList->nodePt;
+//   int coverage = 0;
+//   // char* output;
+//   List* ptPointer = pathTreeList;
 
 //   while(!coverage){ // check if the new-generated path-trees are coverd already
-//   	while(!ptPointer){ //visit all the path-trees
-//   		for(int i=0; i<ALPHABET_SIZE; i++){
+//   	int before = pathtreeCounter;
+
+//     while(ptPointer->nodePt){ //visit all the path-trees
+//   		PathTree* pt = ptPointer->nodePt;
+
+//       for(int i=0; i<ALPHABET_SIZE; i++){
+//         // create a new path-tree for extension on the symbol
+//         PathTree* newPt =(PathTree*)malloc(sizeof(PathTree));
+//         copy_pathtree(pt, newPt);
+
+//         List* leaves = (List*) malloc(sizeof(List));
+//         get_leaves(newPt, leaves);
+
 // 		  	char symbol = alphabet[i];
-// 		  	ICPair* leaves = get_leaves(ptPointer); // get the leaves
+//         step(leaves,fst,symbol);
+//         contract(newPt);
+// //		  prune(ptPointer); //?
 
-// 		  	// remove the branch that has no transition	
-// 		  	kill(ptPointer, fst, leaves, symbol); 
-
-// 		  	//extend the tree with the input symbol
-// 		  	step(ptPointer,fst, leaves, symbol); 
-
-// 		  	ICPair* newLeaves = get_leaves(ptPointer);
-// 		  	while(!newLeaves){ // traverse all the leaves
-// 			  	closure(ptPointer, fst, newLeaves->fst);
-// 			  	output = contract(ptPointer);
-// 			  	newLeaves = newLeaves->next;
-// 		  	}
-// //		  	prune(ptPointer); //?
-//  	 	}
-//  	 	add_pathtree(tempList, ptPointer);
-//  	 	ptPointer = pathTreeList->nextPt;
+//         // check if this newPt is already in the pathTreeList
+//         if(!is_contained(pathTreeList,newPt)){ // a new path-tree
+//           add_pathtree(pathTreeList,newPt);
+//           pathtreeCounter++;
+//         }
+//  	 	  }
+//       ptPointer = ptPointer->nextPt;
+//     }
+//     coverage = before == pathtreeCounter;
 // 	}
-// 	coverage = is_covered(pathTreeList, tempList);
-// 	}
-
 }
 
 
