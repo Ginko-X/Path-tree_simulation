@@ -68,10 +68,9 @@ void prune(PathTree *pathTree);
  */
 TreeNode* get_root(PathTree *pathTree);
 
-/* Compute the path from the root to the leaf node, which is represented as
- * a string of bits
+/* Compute the bit-path from the root to the leaf
  */
-char* path(PathTree *pathTree, TreeNode *leaf, TreeNode *root); 
+int path(PathTree *root, TreeNode *leaf);
 
 
 /* Get the list of leaves, which is represented as:

@@ -33,16 +33,18 @@ void closure_one(TreeNode *node, int st, Fst (*fst)[2]){
 	else{ // joint state
 		TreeNode* lnode = (TreeNode*) malloc(sizeof(TreeNode));
 		TreeNode* rnode = (TreeNode*) malloc(sizeof(TreeNode));
-		int lst = fst[st][0];
-		int rst = fst[st][1];
-		lnode->n = lst;
-		rnode->n = rst;
-		closure_one(lnode,lst, fst);
-		closure_one(rnode,rst, fst);
-		node->lchild = lnode;
-		node->rchild = rnode;
-		lnode->parent = node;
-		rnode->parent = node;
+		if(lnode && rnode){
+			int lst = fst[st][0];
+			int rst = fst[st][1];
+			lnode->n = lst;
+			rnode->n = rst;
+			closure_one(lnode,lst, fst);
+			closure_one(rnode,rst, fst);
+			node->lchild = lnode;
+			node->rchild = rnode;
+			lnode->parent = node;
+			rnode->parent = node;
+		}
 	}
 }
 
@@ -111,22 +113,20 @@ void kill_one(TreeNode *node, int st){
 		pr->rchild = NULL;
 }
 
-void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
-
 
 //'node': the leaf(pointer)
 // st: the name of this leaf
-void step_one(TreeNode* node, int st, char symbol, Fst (*fst)[2]){
+void step_one(TreeNode* leaf, int st, char symbol, Fst (*fst)[2]){
 	if(fst[st][1] == A2I(symbol)){
 		TreeNode* newNode = (TreeNode*) malloc(sizeof(TreeNode));
 		int newSt = fst[st][0];
 		newNode->n = newSt;
 		closure_one(newNode, newSt, fst);
-		node->lchild = newNode;
-		node->rchild = NULL;
+		leaf->lchild = newNode;
+		leaf->rchild = NULL;
 	}
 	else // kill this branch
-		kill_one(node,st);
+		kill_one(leaf,st);
 }
 
 
@@ -160,7 +160,7 @@ void contract(PathTree *root){
 				else //output bit 0
 					p = root->lchild;
 				root->n = p->n;
-				
+
 				root->lchild = p->lchild;
 				if(p->lchild)
 					p->lchild->parent = root;
@@ -178,17 +178,90 @@ void contract(PathTree *root){
 // ??
 void prune(PathTree *pathTree);
 
-
-/*************** Basic operations for Path Tree  ***********************/
-// Reference: Grathwolh's PhD Thesis Page 99 
-
-/* Get the root node of a path tree 
+/* Check if the two path-trees are the same, two comparison conditions:
+ * 1. all leaf states are the same
+ * 2. all paths for each leaf are the same
  */
-TreeNode* get_root(PathTree *pathTree);
+int compare_pathtree(PathTree* pt1, PathTree* pt2){
+	List* leaves1 = (List*) malloc(sizeof(List));
+	List* leaves2 = (List*) malloc(sizeof(List));
+	get_leaves(pt1,leaves1);
+	get_leaves(pt2,leaves2);
 
-/* Compute the path from the root to the leaf node, which is represented as
- * a string of bits
+	List* p1 = leaves1;
+	List* p2 = leaves2;
+
+	while(p1 && p2){
+		if((p1->nodePt->n == p2->nodePt->n) &&
+			(path(pt1,p1->nodePt) == path(pt2,p2->nodePt))){
+			p1 = p1->nextPt;
+			p2 = p2->nextPt;
+		}
+		else{
+			return -1;
+		}
+	}
+	if(p1== NULL && p2 ==NULL)
+		return 1; // equal
+	else 
+		return -1; // not equal
+}
+
+/* Compute the bit-path from the root to the leaf
+ * The bits from left to right correspond to those in the path tree
+ * from bottom to top 
  */
-char* path(PathTree *pathTree, TreeNode *leaf, TreeNode *root); 
+int path(PathTree *root, TreeNode *leaf){
+	if(root ==leaf)
+		return -1;  // only a root in the pathtree, no path
+
+	unsigned int bits=0;
+	TreeNode *p1, *p2;
+	p1 = leaf;
+	p2 = leaf;
+
+	while(p1){
+		p1 = p2->parent;		
+		if(p1->lchild == p2)
+			bits = bits<<1;
+		else 
+			bits = (bits<<1)+1;
+		p2 = p1;	
+		p1= p1->parent;
+	}	
+
+	return bits;
+} 
+
+
+void copy_treenode(TreeNode* src, TreeNode* dest){
+	dest->n = src->n;
+	dest->reg = src->reg;
+	dest->lchild = NULL;
+	dest->rchild = NULL;
+	dest->parent = NULL;
+}
+
+/* Copy the pathtree 'src' into 'dest'
+ */
+void copy_pathtree(PathTree* src, PathTree* dest){
+	if(src){
+		copy_treenode(src, dest);
+		if(src->lchild){
+			TreeNode* p = (TreeNode*) malloc(sizeof(TreeNode));
+			copy_pathtree(src->lchild,p);
+			dest->lchild = p;
+			p->parent = dest;
+		}
+		if(src->rchild){
+			TreeNode* p = (TreeNode*) malloc(sizeof(TreeNode));			
+			copy_pathtree(src->rchild,p);			
+			dest->rchild = p;
+			p->parent = dest;
+		}
+	}
+}
+
+
 
 

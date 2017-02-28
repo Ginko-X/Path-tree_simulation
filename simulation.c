@@ -10,9 +10,12 @@
 #define ALPHABET_SIZE  2
 
 #define A2I(x) (95-x)  // letters must be ACSII greater than 'a'
-
-#define TEST 1
 #define NEW_LINE  printf("\n")
+
+#define TEST 0
+#define COMPARE 1
+
+
 
  // Simplified Thompson FST representation:
   // First column: the left choice, -1 means no outgoing edge,i.e. final state
@@ -21,7 +24,6 @@
   // a:-2 
   // b:-3
   // c:-4,
- 
 int fst1[9][2] = {{1,5},{2,-2},{3,-3},
   				   {0,4},{8,-1},{6,-2},
   				   {7,-4},{0,-1},{-1,-1}};
@@ -32,7 +34,11 @@ int fst2[17][2] = {{1,8},{2,-1},{3,5},
   					{10,16},{11,14},{12,-2},
   					{13,-1},{9,-1},{15,-3},
   					{13,-1},{7,-1}};
-//
+
+int fst3[12][2] = {{1,-1},{2,11},{3,8},
+                  {4,-2},{5,-2},{6,-2},
+                  {7,-1},{1,-1},{9,-2},
+                  {10,-2},{7,-1},{-1,-1}};
 
 
 List* pathTreeList; 
@@ -58,44 +64,37 @@ int main(int argc, char **argv){
 
   add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
   pathtreeCounter++;
-#if TEST
+
+
+// copy a path-tree
+  PathTree* pt2 =(PathTree*)malloc(sizeof(PathTree));
+  copy_pathtree(initPt, pt2);
+  add_pathtree(pathTreeList,pt2);
+  pathtreeCounter++;
+#if COMPARE
    printf("pathTree counter: %d \n Pathtrees: ", pathtreeCounter);
-   print_list(pathTreeList);
-   printf("\n");
+   print_list(pathTreeList); NEW_LINE;
 #endif 
 
-   List* leaves = (List*) malloc(sizeof(List));
-   get_leaves(initPt,leaves);
+  List* leaves = (List*) malloc(sizeof(List));
+  get_leaves(pt2,leaves);  
 #if TEST
-   printf("Leaves of init path-tree: ");
-   print_list(leaves); NEW_LINE;
+  printf("Pt2 Leaves: ");
+  print_list(leaves); NEW_LINE;
 #endif
 
-   step(leaves, fst,'b');
-#if TEST
-   print_pathtree(initPt); NEW_LINE;
-#endif
-    contract(initPt);
-#if TEST
-   print_pathtree(initPt); NEW_LINE;
-#endif
-
-printf("input 2nd 'b'\n");
-   List* leaves2 = (List*) malloc(sizeof(List));
-   get_leaves(initPt,leaves2);
-   printf("Leaves of init path-tree: ");
-   print_list(leaves2); NEW_LINE;
-
-   step(leaves2, fst,'b');
-   contract(initPt);
-#if TEST
-   print_pathtree(initPt); NEW_LINE;
+  step(leaves, fst,'b');
+  contract(pt2);
+#if COMPARE
+  print_pathtree(initPt); NEW_LINE;
+  print_pathtree(pt2); NEW_LINE;
+  printf("2nd: Compare initpt and pt2: %d\n",compare_pathtree(initPt, pt2));
 #endif
 
 
-  // List * tempList;
-  // bool coverage = false;
-  // char* output;
+// List * tempList;
+// bool coverage = false;
+// char* output;
 
 //   PathTree* ptPointer = pathTreeList->nodePt;
 
