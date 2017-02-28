@@ -44,7 +44,8 @@ void closure(PathTree *pathTree, Fst (*fst)[2], int stateNum);
 
 /* Compute the transition on the input 'symbol' 
  */
-void step(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
+//void step(PathTree *pathTree, Fst (*fst)[2], char symbol);
+void step(List* leaves, Fst (*fst)[2], char symbol);
 
 void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
 

@@ -113,7 +113,7 @@ void kill_one(TreeNode *node, int st){
 void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
 
 
-//'node': the leaf
+//'node': the leaf(pointer)
 // st: the name of this leaf
 void step_one(TreeNode* node, int st, char symbol, Fst (*fst)[2]){
 	if(fst[st][1] == A2I(symbol)){
@@ -131,7 +131,14 @@ void step_one(TreeNode* node, int st, char symbol, Fst (*fst)[2]){
 
 /* Compute the transition on the input 'symbol' 
  */
-void step(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
+void step(List* leaves, Fst (*fst)[2], char symbol){
+	while(leaves){
+		if(leaves->nodePt){
+			step_one(leaves->nodePt,leaves->nodePt->n, symbol, fst);
+		}
+		leaves = leaves->nextPt;
+	}
+}
 
 /* Contract the path-tree by merging all the determinized states
  * return the bits of the determinized stem if any

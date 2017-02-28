@@ -12,6 +12,7 @@
 #define A2I(x) (95-x)  // letters must be ACSII greater than 'a'
 
 #define TEST 1
+#define NEW_LINE  printf("\n")
 
  // Simplified Thompson FST representation:
   // First column: the left choice, -1 means no outgoing edge,i.e. final state
@@ -71,9 +72,10 @@ int main(int argc, char **argv){
    printf("\n");
 #endif
 
-   step_one(leaves->nodePt, 3,'a', fst);
+   step(leaves, fst,'b');
 #if TEST
    print_pathtree(initPt);
+   NEW_LINE;
 #endif
  
 
