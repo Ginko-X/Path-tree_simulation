@@ -14,14 +14,14 @@ VERSION = 0.1
 
 
 CC = gcc
-CFLAGS = -std=c99 -O0 -g -Wall
+CFLAGS = -Wall #-std=c99 -O0 -g -Wall
 #CDEFS = -D_FILE_OFFSET_BITS=64
 LD = $(CC)
 LDFLAGS = $(CFLAGS)
 
-SOURCES_C = simulation.c FST.c path_tree.c 
+SOURCES_C = simulation.c path_tree.c #FST.c 
 HELPERS =
-OBJECTS = simulation.o FST.o path_tree.o
+OBJECTS = simulation.o path_tree.o #FST.o 
 EXECUTABLE = simulation
 
 default: compile

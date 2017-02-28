@@ -11,7 +11,7 @@
 
 void path_tree_init(Fst (*fst)[2], PathTree* root){
 	root->n = 0;
-	root->parent = NULL;
+    root->parent = NULL;
 //		node->reg = ??
 	closure_one(root,0,fst);
 }
@@ -61,7 +61,6 @@ void print_pathtree(TreeNode* root){
  */
 void closure(PathTree *pathTree, Fst (*fst)[2], int stateNum);
 
-
 void kill_one(TreeNode *node, int st){
 	TreeNode* pr = node->parent;
 	if(pr->lchild->n == st) // this 'node' is the lchild of its parent
@@ -89,8 +88,6 @@ void step_one(TreeNode* node, int st, char symbol, Fst (*fst)[2]){
 /* Compute the transition on the input 'symbol' 
  */
 void step(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
-
-
 
 /* Contract the path-tree by merging all the determinized states
  * return the bits of the determinized stem if any

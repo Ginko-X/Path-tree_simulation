@@ -20,13 +20,12 @@
   // a:-2 
   // b:-3
   // c:-4,
-  // i.e: 95 - int(x)
  
- int fst1[9][2] = {{1,5},{2,-2},{3,-3},
+int fst1[9][2] = {{1,5},{2,-2},{3,-3},
   				   {0,4},{8,-1},{6,-2},
   				   {7,-4},{0,-1},{-1,-1}};
 
-  int fst2[17][2] = {{1,8},{2,-1},{3,5},
+int fst2[17][2] = {{1,8},{2,-1},{3,5},
   					{4,-2},{2,-1},{6,-3},
   					{7,-1},{-1,-1},{9,-1},
   					{10,16},{11,14},{12,-2},
@@ -44,7 +43,7 @@ static int pathtreeCounter=0 ; //counter for the path-trees
 
 /* Add a pathtree into the list */
 void add_pathtree(List* list, PathTree* pt){
-	if(!list->nodePt){ // the init path-tree
+	if(list->nodePt==NULL){ // the init path-tree
 		list->nodePt = pt;
 		list->nextPt = NULL;
 	}
@@ -63,30 +62,28 @@ void add_pathtree(List* list, PathTree* pt){
 
 int main(int argc, char **argv){
   printf("Simulation starts...\n");
-  Fst (*fst)[2] = fst2;
-
+  
+//  char alphabet[ALPHABET_SIZE] = ALPHABET;
+ 
   PathTree* initPt =(PathTree*)malloc(sizeof(PathTree));
   path_tree_init(fst2, initPt); // generate the init path-tree
-//#if TEST
+#if TEST
   print_pathtree(initPt);
-//#endif  
+#endif 
 
-   pathTreeList = (List*)malloc(sizeof(List));
-   add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
-// #if TEST
+  pathTreeList = (List*)malloc(sizeof(List));
+  pathTreeList-> nodePt = NULL;
+  pathTreeList-> nextPt = NULL;
+
+  add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
+#if TEST
    printf("pathTree counter: %d \n", pathtreeCounter);
-// #endif  
-
-//   step_one(initPt, 3,'a', fst);
-// #if TEST
-//   print_pathtree(initPt);
-// #endif
-  // printf("first alphabet: %d", A2I(ALPHABET[0]));
+#endif  
   // List * tempList;
   // bool coverage = false;
   // char* output;
 
-  // PathTree* ptPointer = pathTreeList->nodePt;
+//   PathTree* ptPointer = pathTreeList->nodePt;
 
 //   while(!coverage){ // check if the new-generated path-trees are coverd already
 //   	while(!ptPointer){ //visit all the path-trees
@@ -112,7 +109,7 @@ int main(int argc, char **argv){
 //  	 	ptPointer = pathTreeList->nextPt;
 // 	}
 // 	coverage = is_covered(pathTreeList, tempList);
-	// }
+// 	}
 
 }
 
