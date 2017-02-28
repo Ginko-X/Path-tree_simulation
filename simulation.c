@@ -32,41 +32,21 @@ int fst2[17][2] = {{1,8},{2,-1},{3,5},
   					{13,-1},{9,-1},{15,-3},
   					{13,-1},{7,-1}};
 //
-typedef struct List List;
-struct List{
-	PathTree *nodePt; // the init path-tree
-	List *nextPt;
-};
+
 
 List* pathTreeList; 
 static int pathtreeCounter=0 ; //counter for the path-trees 
-
-/* Add a pathtree into the list */
-void add_pathtree(List* list, PathTree* pt){
-	if(list->nodePt==NULL){ // the init path-tree
-		list->nodePt = pt;
-		list->nextPt = NULL;
-	}
-	else{
-		while(list->nextPt)
-			list = list->nextPt;
-		List* newList =(List *)malloc(sizeof(List));
-		newList->nodePt = pt;
-		newList->nextPt = NULL;
-		list->nextPt= newList;
-	} 
-	pathtreeCounter++;
-}
-
 
 
 int main(int argc, char **argv){
   printf("Simulation starts...\n");
   
+  Fst (*fst)[2] = fst2; // choose a Thompson fst
+
 //  char alphabet[ALPHABET_SIZE] = ALPHABET;
  
   PathTree* initPt =(PathTree*)malloc(sizeof(PathTree));
-  path_tree_init(fst2, initPt); // generate the init path-tree
+  path_tree_init(fst, initPt); // generate the init path-tree
 #if TEST
   print_pathtree(initPt);
 #endif 
@@ -76,9 +56,27 @@ int main(int argc, char **argv){
   pathTreeList-> nextPt = NULL;
 
   add_pathtree(pathTreeList, initPt);   // add the first path-tree to the list
+  pathtreeCounter++;
 #if TEST
-   printf("pathTree counter: %d \n", pathtreeCounter);
-#endif  
+   printf("pathTree counter: %d \n Pathtrees: ", pathtreeCounter);
+   print_list(pathTreeList);
+   printf("\n");
+#endif 
+
+   List* leaves = (List*) malloc(sizeof(List));
+   get_leaves(initPt,leaves);
+#if TEST
+   printf("Leaves of init path-tree: ");
+   print_list(leaves);
+   printf("\n");
+#endif
+
+   step_one(leaves->nodePt, 3,'a', fst);
+#if TEST
+   print_pathtree(initPt);
+#endif
+ 
+
   // List * tempList;
   // bool coverage = false;
   // char* output;

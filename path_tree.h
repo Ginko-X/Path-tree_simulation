@@ -14,6 +14,16 @@ typedef struct TreeNode {
 
 typedef TreeNode PathTree;
 
+typedef struct List List;
+struct List{
+	PathTree *nodePt; // the init path-tree
+	List *nextPt;
+};
+
+
+void add_pathtree(List* list, PathTree* pt);
+
+
 /* Generate the initial path tree for a given Thompson FST
  */
 void path_tree_init(Fst (*fst)[2], PathTree*);
@@ -63,7 +73,7 @@ char* path(PathTree *pathTree, TreeNode *leaf, TreeNode *root);
 /* Get the list of leaves, which is represented as:
  * a list of ICPairs
  */
-ICPair* get_leaves(PathTree *pathTree);
+//ICPair* get_leaves(PathTree *pathTree);
 
 
 

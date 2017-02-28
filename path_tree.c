@@ -46,6 +46,23 @@ void closure_one(TreeNode *node, int st, Fst (*fst)[2]){
 	}
 }
 
+
+/* Add a pathtree to the list */
+void add_pathtree(List* list, PathTree* pt){
+	if(list->nodePt==NULL){ // the init path-tree
+		list->nodePt = pt;
+		list->nextPt = NULL;
+	}
+	else{
+		while(list->nextPt)
+			list = list->nextPt;
+		List* newList =(List *)malloc(sizeof(List));
+		newList->nodePt = pt;
+		newList->nextPt = NULL;
+		list->nextPt= newList;
+	} 
+}
+
 //print out the path-tree states in a preorder traversal
 void print_pathtree(TreeNode* root){
 	if(root){
@@ -54,6 +71,31 @@ void print_pathtree(TreeNode* root){
 			print_pathtree(root->lchild);
 		if(root->rchild)
 			print_pathtree(root->rchild);
+	}
+}
+
+// print the name of the path-trees/leaves in the list
+void print_list(List* list){
+	while(list){
+		if(list->nodePt)
+			printf("%d  ", list->nodePt->n);
+		list = list->nextPt;
+	}
+}
+
+/* Get the list of leaves (pointers)
+ */
+void get_leaves(PathTree *root, List* leaves){
+	if(root){
+		if((root->lchild==NULL) && (root->rchild==NULL))
+			add_pathtree(leaves,root);
+		else{ 
+			if(root->lchild)
+				get_leaves(root->lchild,leaves);
+			if(root->rchild)
+				get_leaves(root->rchild,leaves);
+		}
+
 	}
 }
 
@@ -71,6 +113,8 @@ void kill_one(TreeNode *node, int st){
 void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
 
 
+//'node': the leaf
+// st: the name of this leaf
 void step_one(TreeNode* node, int st, char symbol, Fst (*fst)[2]){
 	if(fst[st][1] == A2I(symbol)){
 		TreeNode* newNode = (TreeNode*) malloc(sizeof(TreeNode));
@@ -111,7 +155,3 @@ TreeNode* get_root(PathTree *pathTree);
 char* path(PathTree *pathTree, TreeNode *leaf, TreeNode *root); 
 
 
-/* Get the list of leaves, which is represented as:
- * a list of ICPairs
- */
-ICPair* get_leaves(PathTree *pathTree);
