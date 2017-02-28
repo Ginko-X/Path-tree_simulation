@@ -52,7 +52,10 @@ void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
 /* Contract the path-tree by merging all the determinized states
  * return the bits of the determinized stem if any
  */
-char* contract(PathTree *pathTree);
+//char* contract(PathTree *pathTree);
+
+void contract(PathTree *pathTree);
+
 
 // ??
 void prune(PathTree *pathTree);

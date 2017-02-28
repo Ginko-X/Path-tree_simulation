@@ -106,8 +106,9 @@ void closure(PathTree *pathTree, Fst (*fst)[2], int stateNum);
 void kill_one(TreeNode *node, int st){
 	TreeNode* pr = node->parent;
 	if(pr->lchild->n == st) // this 'node' is the lchild of its parent
-		pr->lchild = pr->rchild;
-	pr->rchild = NULL;
+		pr->lchild = NULL;
+	else
+		pr->rchild = NULL;
 }
 
 void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
@@ -141,9 +142,38 @@ void step(List* leaves, Fst (*fst)[2], char symbol){
 }
 
 /* Contract the path-tree by merging all the determinized states
- * return the bits of the determinized stem if any
+ * TODO: return the bits of the determinized stem if any
  */
-char* contract(PathTree *pathTree);
+void contract(PathTree *root){
+	if(root){
+		if(root->lchild && root->rchild){ // a joint node
+			contract(root->lchild);
+			contract(root->rchild);
+		}
+		else{ 
+			if((root->lchild== NULL) && (root->rchild==NULL)) // a leaf
+				return;
+			else{ 
+				TreeNode* p;
+				if(root->lchild == NULL) //output bit 1					
+					p = root->rchild;			
+				else //output bit 0
+					p = root->lchild;
+				root->n = p->n;
+				
+				root->lchild = p->lchild;
+				if(p->lchild)
+					p->lchild->parent = root;
+
+				root->rchild = p->rchild;
+				if(p->rchild)
+					p->rchild->parent = root;
+				contract(root);
+			}
+		}
+	}
+}
+
 
 // ??
 void prune(PathTree *pathTree);

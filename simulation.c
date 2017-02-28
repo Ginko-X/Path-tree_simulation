@@ -68,16 +68,30 @@ int main(int argc, char **argv){
    get_leaves(initPt,leaves);
 #if TEST
    printf("Leaves of init path-tree: ");
-   print_list(leaves);
-   printf("\n");
+   print_list(leaves); NEW_LINE;
 #endif
 
    step(leaves, fst,'b');
 #if TEST
-   print_pathtree(initPt);
-   NEW_LINE;
+   print_pathtree(initPt); NEW_LINE;
 #endif
- 
+    contract(initPt);
+#if TEST
+   print_pathtree(initPt); NEW_LINE;
+#endif
+
+printf("input 2nd 'b'\n");
+   List* leaves2 = (List*) malloc(sizeof(List));
+   get_leaves(initPt,leaves2);
+   printf("Leaves of init path-tree: ");
+   print_list(leaves2); NEW_LINE;
+
+   step(leaves2, fst,'b');
+   contract(initPt);
+#if TEST
+   print_pathtree(initPt); NEW_LINE;
+#endif
+
 
   // List * tempList;
   // bool coverage = false;
