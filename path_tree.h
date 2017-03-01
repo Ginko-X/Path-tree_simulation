@@ -32,6 +32,10 @@ void print_pathtree(TreeNode* root);
 
 void print_list(List* list);
 
+void print_pathtreelist(List* list);
+
+void print_leaves(List* list);
+
 
 /* compute the set of epsilon-closure for the state 'stateNum' in 'fst', 
  * result represented as a path tree
@@ -45,9 +49,9 @@ void closure(PathTree *pathTree, Fst (*fst)[2], int stateNum);
 
 
 /* Compute the transition on the input 'symbol' 
+ * Return 0 if no tranistions on 'symbol'; otherwise some positive int
  */
-//void step(PathTree *pathTree, Fst (*fst)[2], char symbol);
-void step(List* leaves, Fst (*fst)[2], char symbol);
+int step(List* leaves, Fst (*fst)[2], char symbol);
 
 void kill(PathTree *pathTree, Fst (*fst)[2], ICPair* leaves, char symbol);
 

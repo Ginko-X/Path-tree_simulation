@@ -3,12 +3,13 @@
 #include "path_tree.h"
 
 #define Fst int
+#define NEW_LINE  printf("\n")
 #define A2I(x) (95-x) 
+
 
 
 /* Generate the initial path tree for a given Thompson FST
  */
-
 void path_tree_init(Fst (*fst)[2], PathTree* root){
 	root->n = 0;
     root->parent = NULL;
@@ -76,13 +77,26 @@ void print_pathtree(TreeNode* root){
 	}
 }
 
-// print the name of the path-trees/leaves in the list
-void print_list(List* list){
+// print the path-trees in the list
+void print_pathtreelist(List* list){
+	printf("The path-trees in the list are: \n");
+	while(list){
+		if(list->nodePt)
+			print_pathtree(list->nodePt); NEW_LINE;
+		list = list->nextPt;
+	}
+}
+
+
+// print the name of the leaves in the list
+void print_leaves(List* list){
+	printf("The leaves in the list are: ");
 	while(list){
 		if(list->nodePt)
 			printf("%d  ", list->nodePt->n);
 		list = list->nextPt;
 	}
+	NEW_LINE;
 }
 
 /* Get the list of leaves (pointers)
@@ -107,10 +121,11 @@ void closure(PathTree *pathTree, Fst (*fst)[2], int stateNum);
 
 void kill_one(TreeNode *node, int st){
 	TreeNode* pr = node->parent;
-	if(pr->lchild->n == st) // this 'node' is the lchild of its parent
+	if(pr->lchild && pr->lchild->n ==st) // this 'node' is the lchild of its parent
 		pr->lchild = NULL;
 	else
 		pr->rchild = NULL;
+	node->parent = NULL;
 }
 
 
@@ -131,14 +146,28 @@ void step_one(TreeNode* leaf, int st, char symbol, Fst (*fst)[2]){
 
 
 /* Compute the transition on the input 'symbol' 
+ * Return 0 if no tranistions on 'symbol'; otherwise some positive int
  */
-void step(List* leaves, Fst (*fst)[2], char symbol){
+int step(List* leaves, Fst (*fst)[2], char symbol){
+	List* p = leaves;
 	while(leaves){
 		if(leaves->nodePt){
 			step_one(leaves->nodePt,leaves->nodePt->n, symbol, fst);
 		}
 		leaves = leaves->nextPt;
 	}
+
+	//cheak if all leaves are removed
+	int survivedleaves = 0;
+	while(p){
+		if(p->nodePt){
+			if(p->nodePt->parent)
+				survivedleaves++;
+		}
+		p = p->nextPt;
+	}
+
+	return survivedleaves;
 }
 
 /* Contract the path-tree by merging all the determinized states
